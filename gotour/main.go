@@ -5,14 +5,17 @@ import (
 	"math"
 )
 
-func sqrt(x float64) string {
-	if x < 0 {
-		return sqrt(-x) + "i"
+// 関数の引数が float64 型なので、これらの整数を float64 型に変換して処理。
+func pow(x, n, lim float64) float64 {
+	if v := math.Pow(x, n); v < lim {
+		return v
 	}
-	// fmt.Sprintは文字列に変換
-	return fmt.Sprint(math.Sqrt(x))
+	return lim
 }
 
 func main() {
-	fmt.Println(sqrt(2), sqrt(-4))
+	fmt.Println(
+		pow(3, 2, 10),
+		pow(3, 3, 20),
+	)
 }
