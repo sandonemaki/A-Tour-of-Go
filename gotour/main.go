@@ -2,17 +2,16 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
-	t := time.Now()
-	switch {
-	case t.Hour() < 12:
-		fmt.Println("Good morning!")
-	case t.Hour() < 17:
-		fmt.Println("Good afternoon.")
-	default:
-		fmt.Println("Good evening.")
-	}
+	defer fmt.Println("World")
+
+	fmt.Println("hello")
 }
+
+// hello
+// World
+
+// defer へ渡した関数の引数は、すぐに評価されますが、
+// その関数自体は呼び出し元の関数がreturnするまで実行されません。
