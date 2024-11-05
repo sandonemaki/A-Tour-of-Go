@@ -8,13 +8,16 @@ type Vertex struct {
 	X, Y int
 }
 
-func main() {
-	v := Vertex{1, 2} // Vertex構造体の初期化
-	p := &v           // vのポインタを取得
-	// 1e9 は Go では 1000000000 として扱われます
-	p.X = 1e9      // ポインタを通じてXフィールドを変更
-	fmt.Println(v) // vの内容を出力
-}
+var (
+	v1 = Vertex{1, 2} // 型は Vertex
+	v2 = Vertex{X: 1} // Yは暗黙的に0になる
+	v3 = Vertex{}     // XとYがともに0になる
+	// & 演算子を使って、Vertex{1, 2} のアドレスを取得し、そのポインタを p に代入しています。
+	// つまり、p は *Vertex 型であり、Vertex のメモリアドレスを指しています。
+	// Vertex{1, 2} のアドレスが p に代入されるため、p の値は &{1 2} と表示されます。
+	p = &Vertex{1, 2} // 型は *Vertex（Vertexのポインタ型）
+)
 
-// X フィールドが 1000000000 に、Y フィールドが 2 のままである
-// {1000000000 2}
+func main() {
+	fmt.Println(v1, p, v2, v3)
+}
