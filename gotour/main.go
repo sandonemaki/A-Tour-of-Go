@@ -5,27 +5,22 @@ import (
 )
 
 func main() {
-	names := [4]string{
-		"John",
-		"Paul",
-		"George",
-		"Ringo",
+	q := []int{2, 3, 5, 7, 11, 13}
+	fmt.Println(q)
+
+	r := []bool{true, false, true, true, false, true}
+	fmt.Println(r)
+
+	s := []struct {
+		i int
+		b bool
+	}{
+		{2, true},
+		{3, false},
+		{5, true},
+		{7, true},
+		{11, false},
+		{13, true},
 	}
-	fmt.Println(names)
-
-	a := names[0:2]
-	b := names[1:3]
-	fmt.Println(a, b)
-
-	// a と b の両方が同じ配列 names の異なる部分を指していることです。
-	// さらに、a と b は names の同じメモリ領域（インデックス 1 の要素 "Paul"）を指しています。
-	// このため、スライス b でインデックス 0 の要素を変更すると、スライス a にも影響が出ます。
-	b[0] = "XXX"
-	fmt.Println(a, b)
-	fmt.Println(names)
+	fmt.Println(s)
 }
-
-// [John Paul George Ringo]
-// [John Paul] [Paul George]
-// [John XXX] [XXX George]
-// [John XXX George Ringo]
