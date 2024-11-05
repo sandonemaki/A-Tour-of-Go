@@ -4,20 +4,19 @@ import (
 	"fmt"
 )
 
-type Vertex struct {
-	X, Y int
-}
-
-var (
-	v1 = Vertex{1, 2} // 型は Vertex
-	v2 = Vertex{X: 1} // Yは暗黙的に0になる
-	v3 = Vertex{}     // XとYがともに0になる
-	// & 演算子を使って、Vertex{1, 2} のアドレスを取得し、そのポインタを p に代入しています。
-	// つまり、p は *Vertex 型であり、Vertex のメモリアドレスを指しています。
-	// Vertex{1, 2} のアドレスが p に代入されるため、p の値は &{1 2} と表示されます。
-	p = &Vertex{1, 2} // 型は *Vertex（Vertexのポインタ型）
-)
-
 func main() {
-	fmt.Println(v1, p, v2, v3)
+	// aという名前の文字列型配列を宣言。
+	//[2]stringは「2要素を持つ文字列型配列」を意味
+	// この配列は、string型の要素を2つ保持することができる。
+
+	// varキーワードによって、aはゼロ値で初期化
+	var a [2]string
+	a[0] = "Hello"
+	a[1] = "World"
+	fmt.Println(a[0], a[1])
+	// 出力はGoの配列のデフォルトの表示形式で表示
+	fmt.Println(a)
+
+	primes := [6]int{2, 3, 5, 7, 11, 13}
+	fmt.Println(primes)
 }
