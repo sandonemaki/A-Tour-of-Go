@@ -1,28 +1,16 @@
 package main
 
-import (
-	"fmt"
-)
+import "golang.org/x/tour/pic"
 
+// https://scrapbox.io/maki-Py/Go_Pic_%E9%96%A2%E6%95%B0
+
+func Pic(dx, dy int) [][]uint8 {
+
+}
 func main() {
-	pow := make([]int, 10)
-	for i := range pow {
-		// ビットシフト演算 1 << uint(i) は、数学的には 2**i（2 の i 乗）と同じ
-		// pow = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
-		pow[i] = 1 << uint(i) // == 2**i
-	}
-	for _, value := range pow {
-		fmt.Printf("%d\n", value)
-	}
+	pic.Show(Pic)
 }
 
-// 1
-// 2
-// 4
-// 8
-// 16
-// 32
-// 64
-// 128
-// 256
-// 512
+// uint8(intValue) は型変換を行っており、
+// int 型の値を uint8 型に変換します。
+// これにより、計算結果を8ビットの範囲に収めることができます。
