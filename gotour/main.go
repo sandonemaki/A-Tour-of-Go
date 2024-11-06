@@ -2,26 +2,29 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 func main() {
-	board := [][]string{
-		[]string{"_", "_", "_"},
-		[]string{"_", "_", "_"},
-		[]string{"_", "_", "_"},
-	}
-	board[0][0] = "X"
-	board[2][2] = "O"
-	board[1][2] = "X"
-	board[1][0] = "O"
-	board[0][2] = "X"
+	var s []int
+	printSlice(s)
 
-	for i := 0; i < len(board); i++ {
-		fmt.Printf("%s\n", strings.Join(board[i], " "))
-	}
+	s = append(s, 0)
+	printSlice(s)
+
+	s = append(s, 1)
+	printSlice(s)
+
+	s = append(s, 2, 3, 4)
+	printSlice(s)
 }
 
-// board[0] の要素は []string{"X", "_", "X"}。
-// strings.Join(board[1], " ") を実行すると、"X _ X" になります。
-// fmt.Printf("%s\n", "X _ X") は、この文字列を出力し、改行します。
+func printSlice(s []int) {
+	// fmt.Printf の %v は、デフォルトのフォーマットで値を表示します。
+	// スライスや配列を %v で表示した場合、要素はスペースで区切られた形で表示されます。
+	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
+}
+
+// len=0 cap=0 []
+// len=1 cap=1 [0]
+// len=2 cap=2 [0 1]
+// len=5 cap=6 [0 1 2 3 4]
