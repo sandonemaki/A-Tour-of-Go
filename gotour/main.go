@@ -1,24 +1,27 @@
 package main
 
-import "fmt"
-
-// https://scrapbox.io/maki-Py/Go%E3%81%AE%E3%82%B9%E3%83%A9%E3%82%A4%E3%82%B9%E3%81%AE%E5%AE%B9%E9%87%8F%E3%81%AE%E5%AE%9A%E7%BE%A9
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
-	a := make([]int, 5)
-	printSlice("a", a)
+	board := [][]string{
+		[]string{"_", "_", "_"},
+		[]string{"_", "_", "_"},
+		[]string{"_", "_", "_"},
+	}
+	board[0][0] = "X"
+	board[2][2] = "O"
+	board[1][2] = "X"
+	board[1][0] = "O"
+	board[0][2] = "X"
 
-	b := make([]int, 0, 5)
-	printSlice("b", b)
-
-	c := b[:2]
-	printSlice("c", c)
-
-	d := c[2:5]
-	printSlice("d", d)
+	for i := 0; i < len(board); i++ {
+		fmt.Printf("%s\n", strings.Join(board[i], " "))
+	}
 }
 
-func printSlice(s string, x []int) {
-	fmt.Printf("%s len=%d cap=%d %v\n",
-		s, len(x), cap(x), x)
-}
+// board[0] の要素は []string{"X", "_", "X"}。
+// strings.Join(board[1], " ") を実行すると、"X _ X" になります。
+// fmt.Printf("%s\n", "X _ X") は、この文字列を出力し、改行します。
