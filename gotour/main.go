@@ -4,13 +4,25 @@ import (
 	"fmt"
 )
 
-var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
-
-// スライスをrangeで繰り返す場合、rangeは反復毎に2つの変数を返します。
-// 1つ目の変数はインデックス( index )で、
-// 2つ目はインデックスの場所の要素のコピーです。
 func main() {
-	for i, v := range pow {
-		fmt.Printf("2**%d = %d\n", i, v)
+	pow := make([]int, 10)
+	for i := range pow {
+		// ビットシフト演算 1 << uint(i) は、数学的には 2**i（2 の i 乗）と同じ
+		// pow = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+		pow[i] = 1 << uint(i) // == 2**i
+	}
+	for _, value := range pow {
+		fmt.Printf("%d\n", value)
 	}
 }
+
+// 1
+// 2
+// 4
+// 8
+// 16
+// 32
+// 64
+// 128
+// 256
+// 512
