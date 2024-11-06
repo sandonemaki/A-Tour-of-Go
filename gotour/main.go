@@ -4,27 +4,13 @@ import (
 	"fmt"
 )
 
+var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+
+// スライスをrangeで繰り返す場合、rangeは反復毎に2つの変数を返します。
+// 1つ目の変数はインデックス( index )で、
+// 2つ目はインデックスの場所の要素のコピーです。
 func main() {
-	var s []int
-	printSlice(s)
-
-	s = append(s, 0)
-	printSlice(s)
-
-	s = append(s, 1)
-	printSlice(s)
-
-	s = append(s, 2, 3, 4)
-	printSlice(s)
+	for i, v := range pow {
+		fmt.Printf("2**%d = %d\n", i, v)
+	}
 }
-
-func printSlice(s []int) {
-	// fmt.Printf の %v は、デフォルトのフォーマットで値を表示します。
-	// スライスや配列を %v で表示した場合、要素はスペースで区切られた形で表示されます。
-	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
-}
-
-// len=0 cap=0 []
-// len=1 cap=1 [0]
-// len=2 cap=2 [0 1]
-// len=5 cap=6 [0 1 2 3 4]
