@@ -1,16 +1,22 @@
 package main
 
-import "golang.org/x/tour/pic"
+import (
+	"fmt"
+)
 
-// https://scrapbox.io/maki-Py/Go_Pic_%E9%96%A2%E6%95%B0
-
-func Pic(dx, dy int) [][]uint8 {
-
+// Vertex は緯度 (Lat) と経度 (Long) の2つの float64 型のフィールドを持つ構造体
+type Vertex struct {
+	Lat, Long float64
 }
+
 func main() {
-	pic.Show(Pic)
+	// map[string]Vertex 型のマップ m を作成
+	// キーとして string 型、値として Vertex 型を持つマップ
+	var m map[string]Vertex
+	m = make(map[string]Vertex)
+	// "Bell Labs" というキーに Vertex 型の値 40.68433, -74.39967 を追加
+	m["Bell Labs"] = Vertex{
+		40.68433, -74.39967,
+	}
+	fmt.Println(m["Bell Labs"])
 }
-
-// uint8(intValue) は型変換を行っており、
-// int 型の値を uint8 型に変換します。
-// これにより、計算結果を8ビットの範囲に収めることができます。
