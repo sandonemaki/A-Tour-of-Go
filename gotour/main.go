@@ -9,14 +9,17 @@ type Vertex struct {
 	Lat, Long float64
 }
 
-func main() {
-	// map[string]Vertex 型のマップ m を作成
-	// キーとして string 型、値として Vertex 型を持つマップ
-	var m map[string]Vertex
-	m = make(map[string]Vertex)
-	// "Bell Labs" というキーに Vertex 型の値 40.68433, -74.39967 を追加
-	m["Bell Labs"] = Vertex{
+// map[string]Vertex 型のマップ m を作成
+// キーとして string 型、値として Vertex 型を持つマップ
+var m = map[string]Vertex{
+	"Bell Labs": Vertex{
 		40.68433, -74.39967,
-	}
-	fmt.Println(m["Bell Labs"])
+	},
+	"Google": Vertex{
+		37.42202, -122.08408,
+	},
+}
+
+func main() {
+	fmt.Println(m)
 }
