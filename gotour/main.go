@@ -2,30 +2,29 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
-// compute 関数は、引数として２つの float64 型の値をとり、float64 型の結果を返す関数を受け取ります。
-func compute(fn func(float64, float64) float64) float64 {
-	// 引数として渡された fn を 3 と 4 という引数で実行し結果を返します。
-	return fn(3, 4)
+// adder 関数が「func(int) int 型の関数」を返す
+func adder() func(int) int {
+	sum := 0
+	// adder は func(x int) int { sum += x; return sum } という関数を返す
+	return func(x int) int {
+		// x を受け取って sum に加え、更新された sum の値を返す
+		sum += x
+		return sum
+	}
 }
 
 func main() {
-	// hypot は匿名関数で2つの float64 型の引数 x と y を受け取り、その平方根を返します。
-	// これは三角形の斜辺（hypotenuse）を求めるための計算
-	hypot := func(x, y float64) float64 {
-		return math.Sqrt(x*x + y*y)
+	// pos や neg という変数には、adder によって返されたクロージャ（無名関数）が格納。
+	// この時点で adder は終了。
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			// pos や neg に格納されたクロージャが実行されるが、adder 関数は再度実行されない。
+			//これらのクロージャは、sum の状態を保持し続ける性質を持っている
+			pos(i),    // pos に格納されたクロージャが i を受け取り pos の sum を更新し、新しい値を返す。
+			neg(-2*i), // neg に格納されたクロージャが -2*i を受け取り neg の sum を更新して返す。
+		)
 	}
-	// hypot 関数を実行
-	fmt.Println(hypot(5, 12))
-
-	// compute 関数に hypot を渡し、3 と 4 を引数として計算した結果を出力する
-	fmt.Println(compute(hypot))
-	// compute 関数に math.Pow を渡し、3^4 を計算して出力
-	fmt.Println(compute(math.Pow))
 }
-
-// 13
-// 5
-// 81
