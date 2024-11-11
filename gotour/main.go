@@ -2,41 +2,30 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
-// fibonacci 関数が「func(int) int 型の関数」を返す
-func fibonacci() func(int) int {
-	// 初期化
-	a, b := 0, 1
-	return func(n int) int {
-		if n == 0 {
-			return a
-		} else if n == 1 {
-			return b
-		} else {
-			// フィボナッチ数列の計算
-			a, b = b, a+b
-			return b
-		}
-	}
+// Vertex 型の構造体を定義する
+type Vertex struct {
+	X, Y float64
 }
 
+// Go にはクラスの概念はないが、構造体や型に対してメソッドを定義することができる。
+// このメソッドは特別なレシーバ（receiver）引数を持っている
+// レシーバは、func キーワードとメソッド名の間に記述され、メソッドがどの型に属するかを示す。
+
+// Abs というメソッドを Vertex 型に定義。
+// (v Vertex) がレシーバで、これにより Abs メソッドは Vertex 型に関連付けられる。
+func (v Vertex) Abs() float64 {
+	// メソッド内で v.X や v.Y を参照できる
+	// v が指している Vertex インスタンスのフィールドを使用して計算。
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
 func main() {
-	// fibonacci() 関数からクロージャを取得し、変数 f に保存する。
-	// これにより、f は状態を保持したまま呼び出すたびに次のフィボナッチ数を計算する関数となる。
-	f := fibonacci()
-	for i := 0; i < 10; i++ {
-		fmt.Println(f(i))
-	}
+	// Vertex 型の変数 v を X=3、Y=4 で初期化
+	v := Vertex{3, 4}
+	// v.Abs() のようにして Abs メソッドを呼び出す
+	fmt.Println(v.Abs())
 }
 
-// 0
-// 1
-// 1
-// 2
-// 3
 // 5
-// 8
-// 13
-// 21
-// 34
