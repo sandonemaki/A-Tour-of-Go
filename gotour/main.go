@@ -27,6 +27,7 @@ func main() {
 
 	// Vertex 型のポインタ p を初期化
 	p := &Vertex{4, 3}
+	// p.Abs() は (*p).Abs() として解釈されます。
 	fmt.Println(p.Abs())
 	// ポインタ変数 p を渡す
 	fmt.Println(AbsFunc(*p))
@@ -36,3 +37,13 @@ func main() {
 // 5
 // 5
 // 5
+
+// メソッドが変数レシーバである場合、呼び出し時に、
+// 変数、または、ポインタのいずれかのレシーバとして取ることができます
+
+// var v Vertex
+// fmt.Println(v.Abs()) // OK
+// p := &v
+// fmt.Println(p.Abs()) // OK
+
+// この場合、 p.Abs() は (*p).Abs() として解釈されます。
