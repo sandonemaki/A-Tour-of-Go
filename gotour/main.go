@@ -5,36 +5,57 @@ import (
 	"math"
 )
 
-// Vertex という構造体を定義
+// Abser は、Abs() メソッドを持つインターフェース
+// Abs() メソッドは、float64 型の値を返す
+// これを実装する任意の型は、Abs() メソッドを定義しなければならない。
+type Abser interface {
+	Abs() float64
+}
+
+func main() {
+	var a Abser
+	f := MyFloat(-math.Sqrt2)
+	v := Vertex{3, 4}
+
+	// MyFloat 型の値を a に代入。
+	// f は Abser インターフェースを実装している。
+	a = f
+
+	// Vertex 型のポインタを a に代入。
+	// ポインタがインターフェースを実装している。
+	a = &v
+
+	// 次の行では、v はポインタではありません。
+	// エラー。Vertex 型の値そのものは Abser を実装していません。
+
+	// Abs() メソッドは *Vertex (ポインタレシーバ) にのみ定義されているため、
+	// ポインタである &v を Abser に代入する必要があります。
+	// a = v
+
+	fmt.Println(a.Abs())
+}
+
+type MyFloat float64
+
+// MyFloat は Abs() メソッドを持ち、Abser インターフェースを実装している
+func (f MyFloat) Abs() float64 {
+	if f < 0 {
+		return float64(-f)
+	}
+	return float64(f)
+}
+
 type Vertex struct {
 	X, Y float64
 }
 
-// Vertex 型のポインタレシーバ v を持つ Scale メソッドを定義
-// v の値を変更
-func (v *Vertex) Scale(f float64) {
-	v.X = v.X * f
-	v.Y = v.Y * f
-}
-
-// Vertex 型の変数 v を引数に Scale 関数を定義
+// Vertex 型も Abs() メソッドを持ち、
+// *Vertex (ポインタレシーバ) が Abser インターフェースを実装している。
 func (v *Vertex) Abs() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }
 
-func main() {
-	// Vertex 型のポインタ v を初期化
-	v := &Vertex{4, 3}
-	// v.Abs() は (*v).Abs() として解釈される
-	fmt.Printf("Before scaling: %+v, Abs: %v\n", v, v.Abs())
-	v.Scale(5)
-	// v.Abs() は (*v).Abs() として解釈される
-	fmt.Printf("After scaling: %+v, Abs: %v\n", v, v.Abs())
-}
+// 5
 
-// Before scaling: &{X:4 Y:3}, Abs: 5
-// After scaling: &{X:20 Y:15}, Abs: 25
-
-// %+v を使うと、構造体の各フィールド名が出力に含まれるため、
-// フィールド名とその値がペアで表示される。
-// 例えば、&{X:4 Y:3} のように X や Y のフィールド名が表示される。
+// インターフェース型に代入するには、その型がインターフェースを実装している必要がある。
+// ポインタレシーバ (*Vertex) を持つメソッドは、その型のポインタにのみ関連づけられる。
