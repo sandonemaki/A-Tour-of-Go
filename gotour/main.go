@@ -5,28 +5,32 @@ import (
 )
 
 func main() {
-	// interface i は 0 個のメソッドを持つインターフェース
-	// interface{} は空のインターフェースで、Go では 任意の型 を保持できる特別なインターフェース。
-	var i interface{}
-	describe(i)
+	var i interface{} = "hello"
 
-	// 空のインターフェースは、任意の型の値を保持できる。
-	// i は int 型の値 42 を保持
-	i = 42
-	describe(i)
+	s := i.(string)
+	fmt.Println(s)
 
-	// i は string 型の値 "hello" を保持
-	i = "hello"
-	describe(i)
+	s, ok := i.(string)
+	fmt.Println(s, ok)
+
+	// i が float64 型でないため、ok は false になり、
+	// f にはその型のゼロ値（0）が代入される。
+	f, ok := i.(float64)
+	fmt.Println(f, ok)
+
+	// 型アサーションをチェックなしで実行しているため、
+	// i が float64 型でない場合は panic（ランタイムエラー）が発生
+	f = i.(float64) // panic
+	fmt.Println(f)
 }
 
-// describe 関数の引数に空のインターフェイス i が渡され値を表示
-// 空のインターフェースは、未知の型の値を扱うコードで使用される。
-// interface{} 型の任意の数の引数を受け取る。
-func describe(i interface{}) {
-	fmt.Printf("(%v, %T)\n", i, i)
-}
+// hello
+// hello true
+// 0 false
+// panic: interface conversion: interface {} is string, not float64
 
-// (<nil>, <nil>)
-// (42, int)
-// (hello, string)
+// まとめ
+// 型アサーションを使用する際には、チェック付きの形式 (s, ok := i.(type)) を使うことで、
+// 安全に型変換の成否を確認できる。
+// チェックなしの型アサーション (s := i.(type)) は、
+// 指定された型でない場合に panic を引き起こすため、注意が必要。
