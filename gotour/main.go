@@ -15,6 +15,7 @@ func main() {
 
 	describe(i) // 出力：(<nil>, <nil>)
 	// M() メソッドが i を nil として受け取る。
+	// nil pointer dereference というランタイムエラーが発生
 	// panic: runtime error: invalid memory address or nil pointer dereference
 	i.M() // nil dereference in dynamic method call
 }
