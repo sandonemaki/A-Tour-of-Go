@@ -4,33 +4,29 @@ import (
 	"fmt"
 )
 
-func main() {
-	var i interface{} = "hello"
-
-	s := i.(string)
-	fmt.Println(s)
-
-	s, ok := i.(string)
-	fmt.Println(s, ok)
-
-	// i が float64 型でないため、ok は false になり、
-	// f にはその型のゼロ値（0）が代入される。
-	f, ok := i.(float64)
-	fmt.Println(f, ok)
-
-	// 型アサーションをチェックなしで実行しているため、
-	// i が float64 型でない場合は panic（ランタイムエラー）が発生
-	f = i.(float64) // panic
-	fmt.Println(f)
+// 型switchの宣言は、型アサーション i.(T) と同じ構文を持ちますが、
+// 特定の型 T はキーワード type に置き換えられます。
+func do(i interface{}) {
+	// インターフェースの値 i によって保持される値を保持
+	// i が保持している具体的な型をチェック
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Twice %v is %v\n", v, v*2)
+	case string:
+		fmt.Printf("%q is %v bytes long\n", v, len(v))
+	default:
+		// do(true) の場合、i は bool 型なので、どの case にも一致せず、
+		// default ブロックが実行されます。
+		fmt.Printf("I don't know about type %T!\n", v)
+	}
 }
 
-// hello
-// hello true
-// 0 false
-// panic: interface conversion: interface {} is string, not float64
+func main() {
+	do(21)
+	do("hello")
+	do(true)
+}
 
-// まとめ
-// 型アサーションを使用する際には、チェック付きの形式 (s, ok := i.(type)) を使うことで、
-// 安全に型変換の成否を確認できる。
-// チェックなしの型アサーション (s := i.(type)) は、
-// 指定された型でない場合に panic を引き起こすため、注意が必要。
+// Twice 21 is 42
+// "hello" is 5 bytes long
+// I don't know about type bool!
