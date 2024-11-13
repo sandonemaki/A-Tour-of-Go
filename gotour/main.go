@@ -10,40 +10,31 @@ type Vertex struct {
 	X, Y float64
 }
 
-// Vertex 型のポインタレシーバ v を持つ Abs メソッドを定義
-func (v Vertex) Abs() float64 {
-	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+// Vertex 型のポインタレシーバ v を持つ Scale メソッドを定義
+// v の値を変更
+func (v *Vertex) Scale(f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
 }
 
 // Vertex 型の変数 v を引数に Scale 関数を定義
-func AbsFunc(v Vertex) float64 {
+func (v *Vertex) Abs() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }
-func main() {
-	// Vertex 型の変数 v を初期化
-	v := Vertex{3, 4}
-	fmt.Println(v.Abs())
-	fmt.Println(AbsFunc(v))
 
-	// Vertex 型のポインタ p を初期化
-	p := &Vertex{4, 3}
-	// p.Abs() は (*p).Abs() として解釈されます。
-	fmt.Println(p.Abs())
-	// ポインタ変数 p を渡す
-	fmt.Println(AbsFunc(*p))
+func main() {
+	// Vertex 型のポインタ v を初期化
+	v := &Vertex{4, 3}
+	// v.Abs() は (*v).Abs() として解釈される
+	fmt.Printf("Before scaling: %+v, Abs: %v\n", v, v.Abs())
+	v.Scale(5)
+	// v.Abs() は (*v).Abs() として解釈される
+	fmt.Printf("After scaling: %+v, Abs: %v\n", v, v.Abs())
 }
 
-// 5
-// 5
-// 5
-// 5
+// Before scaling: &{X:4 Y:3}, Abs: 5
+// After scaling: &{X:20 Y:15}, Abs: 25
 
-// メソッドが変数レシーバである場合、呼び出し時に、
-// 変数、または、ポインタのいずれかのレシーバとして取ることができます
-
-// var v Vertex
-// fmt.Println(v.Abs()) // OK
-// p := &v
-// fmt.Println(p.Abs()) // OK
-
-// この場合、 p.Abs() は (*p).Abs() として解釈されます。
+// %+v を使うと、構造体の各フィールド名が出力に含まれるため、
+// フィールド名とその値がペアで表示される。
+// 例えば、&{X:4 Y:3} のように X や Y のフィールド名が表示される。
