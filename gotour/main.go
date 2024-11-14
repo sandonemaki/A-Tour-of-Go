@@ -4,29 +4,31 @@ import (
 	"fmt"
 )
 
-// 型switchの宣言は、型アサーション i.(T) と同じ構文を持ちますが、
-// 特定の型 T はキーワード type に置き換えられます。
-func do(i interface{}) {
-	// インターフェースの値 i によって保持される値を保持
-	// i が保持している具体的な型をチェック
-	switch v := i.(type) {
-	case int:
-		fmt.Printf("Twice %v is %v\n", v, v*2)
-	case string:
-		fmt.Printf("%q is %v bytes long\n", v, len(v))
-	default:
-		// do(true) の場合、i は bool 型なので、どの case にも一致せず、
-		// default ブロックが実行されます。
-		fmt.Printf("I don't know about type %T!\n", v)
-	}
+// Person 型の構造体を定義
+type Person struct {
+	Name string
+	Age  int
+}
+
+// Person 型のレシーバを持つ String メソッドは、
+// fmt.Stringer インターフェースを実装しています。
+// このメソッドにより、fmt.Println や fmt.Sprintf などで
+// Person 型のインスタンスを出力する際に、自動的にこの String メソッドが呼び出され、
+// カスタムフォーマットで出力されます。
+func (p Person) String() string {
+	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
 }
 
 func main() {
-	do(21)
-	do("hello")
-	do(true)
+	// Person 型のインスタンス a と z を作成
+	a := Person{"Arthur Dent", 42}
+	z := Person{"Zaphod Beeblebrox", 9001}
+	fmt.Println(a, z)
 }
 
-// Twice 21 is 42
-// "hello" is 5 bytes long
-// I don't know about type bool!
+// type Stringer interface {
+//   String() string
+// }
+// Stringer インタフェースは、stringとして表現することができる型です。
+// fmt パッケージ(と、多くのパッケージ)では、変数を文字列で出力するために
+// このインタフェースがあることを確認します。
