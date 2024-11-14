@@ -4,31 +4,26 @@ import (
 	"fmt"
 )
 
-// Person 型の構造体を定義
-type Person struct {
-	Name string
-	Age  int
-}
+type IPAddr [4]byte
 
-// Person 型のレシーバを持つ String メソッドは、
-// fmt.Stringer インターフェースを実装しています。
-// このメソッドにより、fmt.Println や fmt.Sprintf などで
-// Person 型のインスタンスを出力する際に、自動的にこの String メソッドが呼び出され、
-// カスタムフォーマットで出力されます。
-func (p Person) String() string {
-	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
+// IPAddr型に対してString()メソッドを追加
+// fmt.Stringerインターフェースを実装し、IPAddrを文字列に変換
+func (ip IPAddr) String() string {
+	return fmt.Sprintf("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3])
 }
 
 func main() {
-	// Person 型のインスタンス a と z を作成
-	a := Person{"Arthur Dent", 42}
-	z := Person{"Zaphod Beeblebrox", 9001}
-	fmt.Println(a, z)
+	// hostsというマップを定義。キーがstring型、値がIPAddr型
+	// loopbackとgoogleDNSのエントリをhostsマップに追加。それぞれの値はIPAddr型のリテラル
+	hosts := map[string]IPAddr{
+		"loopback":  {127, 0, 0, 1},
+		"googleDNS": {8, 8, 8, 8},
+	}
+	// forループを使ってhostsマップをイテレートし、fmt.Printfでキーと値を出力
+	for name, ip := range hosts {
+		fmt.Printf("%v: %v\n", name, ip)
+	}
 }
 
-// type Stringer interface {
-//   String() string
-// }
-// Stringer インタフェースは、stringとして表現することができる型です。
-// fmt パッケージ(と、多くのパッケージ)では、変数を文字列で出力するために
-// このインタフェースがあることを確認します。
+// loopback: 127.0.0.1
+// googleDNS: 8.8.8.8
