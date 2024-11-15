@@ -1,57 +1,25 @@
 package main
 
 import (
-	"io"
-	"os"
-	"strings"
+	"fmt"
+	"image"
 )
 
-// io.Reader は Go の標準インタフェースで、
-// データをストリームから読み取るためのメソッド Read を持っています。
-// このメソッドは、次のように定義されます：
-// func (T) Read(b []byte) (n int, err error)
-
-// b []byte：読み取ったデータを格納するためのバイトスライス（配列のようなもの）。
-// n int：実際に読み取ったバイト数。
-// err error：エラーがあれば返します。ストリームの終わりに達した場合は io.EOF が返されます。
-
-// rot13Readerの目的
-// rot13Reader 型は、io.Reader をラップし、
-// 読み取ったデータをROT13という暗号に変換して出力すること
-// rot13Reader は単純に io.Reader を内包する構造体
-type rot13Reader struct {
-	r io.Reader
-}
-
-// rot13Readerの目的
-// Read メソッドを実装し、ROT13 暗号を適用します。
-// ROT13 変換は、アルファベットの各文字を13文字後ろにずらします。
-func (r *rot13Reader) Read(b []byte) (int, error) {
-	n, err := r.r.Read(b)
-	if err != nil {
-		return n, err
-	}
-
-	for i := 0; i < n; i++ {
-		b[i] = rot13(b[i])
-	}
-	return n, nil
-}
-
-// ROT13 変換を適用するヘルパー関数
-func rot13(c byte) byte {
-	switch {
-	case 'A' <= c && c <= 'Z':
-		return 'A' + (c-'A'+13)%26
-	case 'a' <= c && c <= 'z':
-		return 'a' + (c-'a'+13)%26
-	default:
-		return c
-	}
-}
-
 func main() {
-	s := strings.NewReader("Lbh penpxrq gur pbqr!")
-	r := rot13Reader{s}
-	io.Copy(os.Stdout, &r)
+	// 画像の色モデル（例えばRGBなど）を返すメソッド
+	// 100x100 ピクセルの新しい画像を作成します。
+	m := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	// 画像のサイズ（範囲）を表す矩形を返すメソッド
+	// Bounds：戻り値は Rectangle 型で、画像の左上（開始座標）と右下（終了座標）の位置を持っている
+	// 結果: (0,0)-(100,100)
+	fmt.Println(m.Bounds())
+	// 指定した座標のピクセルの色を返すメソッド
+	// At(x, y int): 指定した座標 (x, y) の位置にあるピクセルの色を返す。
+	// 返り値は color.Color 型
+	// (0,0) の位置にあるピクセルの RGBA 値を出力します。
+	// 結果: 0 0 0 0　初期状態ではそのピクセルが透明な黒（R, G, Bが0でアルファも0）
+	fmt.Println(m.At(0, 0).RGBA())
 }
+
+// (0,0)-(100,100)
+// 0 0 0 0
