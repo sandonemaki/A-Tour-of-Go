@@ -1,25 +1,36 @@
 package main
 
 import (
-	"fmt"
 	"image"
+	"image/color"
+
+	"golang.org/x/tour/pic"
 )
 
-func main() {
-	// 画像の色モデル（例えばRGBなど）を返すメソッド
-	// 100x100 ピクセルの新しい画像を作成します。
-	m := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	// 画像のサイズ（範囲）を表す矩形を返すメソッド
-	// Bounds：戻り値は Rectangle 型で、画像の左上（開始座標）と右下（終了座標）の位置を持っている
-	// 結果: (0,0)-(100,100)
-	fmt.Println(m.Bounds())
-	// 指定した座標のピクセルの色を返すメソッド
-	// At(x, y int): 指定した座標 (x, y) の位置にあるピクセルの色を返す。
-	// 返り値は color.Color 型
-	// (0,0) の位置にあるピクセルの RGBA 値を出力します。
-	// 結果: 0 0 0 0　初期状態ではそのピクセルが透明な黒（R, G, Bが0でアルファも0）
-	fmt.Println(m.At(0, 0).RGBA())
+// Image 型の定義
+type Image struct {
+	width, height int
 }
 
-// (0,0)-(100,100)
-// 0 0 0 0
+// Bounds メソッドの実装
+func (img Image) Bounds() image.Rectangle {
+	return image.Rect(0, 0, img.width, img.height)
+}
+
+// ColorModel メソッドの実装
+func (img Image) ColorModel() color.Model {
+	return color.RGBAModel
+}
+
+// At メソッドの実装
+func (img Image) At(x, y int) color.Color {
+	// ピクセルの色の値を計算
+	v := uint8((x + y) % 256)
+	return color.RGBA{v, v, 255, 255}
+}
+
+func main() {
+	// Image インスタンスを生成し、画像を表示
+	m := Image{width: 256, height: 256}
+	pic.ShowImage(m)
+}
