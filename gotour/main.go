@@ -1,41 +1,48 @@
 package main
 
 import (
-	"image"
-	"image/color"
-
-	"golang.org/x/tour/pic"
+	"fmt"
+	"time"
 )
 
-// Image 型の定義
-type Image struct {
-	width, height int
-}
-
-// Bounds メソッドの実装
-func (img Image) Bounds() image.Rectangle {
-	return image.Rect(0, 0, img.width, img.height)
-}
-
-// ColorModel メソッドの実装
-// 画像が表示されるときに呼び出される
-func (img Image) ColorModel() color.Model {
-	return color.RGBAModel
-}
-
-// At メソッドの実装
-func (img Image) At(x, y int) color.Color {
-	// ピクセルの色の値を計算
-	// % 256 にすることで、v は 0〜255 の範囲に収まる
-	// 青を255（最大値）に設定しているため、青っぽい色が基調になる
-	// 最後の 255 はアルファ値（不透明度）
-	v := uint8((x + y) % 256)
-	return color.RGBA{v, v, 255, 255}
+func say(s string) {
+	for i := 0; i < 5; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println(s)
+	}
 }
 
 func main() {
-	// Image インスタンスを生成し、画像を表示
-	m := Image{width: 256, height: 256}
-	// 画像を生成して表示
-	pic.ShowImage(m)
+	go say("world")
+	say("hello")
 }
+
+// 実行のたびに異なる順序で結果が表示される可能性がある
+// world
+// hello
+// hello
+// world
+// hello
+// world
+// world
+// hello
+// hello
+
+// 実行の仕組み
+// go say("world") は新しい Goroutine を起動しますが、
+// メインの Goroutine はその開始を待たずに次の say("hello") に進みます。
+//
+// これにより、say("world") と say("hello") は並行して実行され、
+// 2つの Goroutine が同時に動いている状態になります。
+//
+// 各 Goroutine 内では time.Sleep(100 * time.Millisecond) によって100ミリ秒の遅延が発生します。
+// これにより、fmt.Println が交互に実行されるように見えますが、
+// 実際の実行順序は Go のスケジューラによって管理されるため、実行のたびに結果が異なることがあります。
+
+// プログラム内で go キーワードを使うと、
+// メインの Goroutine が終了した時点で他の Goroutine も強制的に終了します。
+// したがって、もし main() 内で say("hello") が終了してしまうと、その直後にプログラム全体が終了し、
+// say("world") が完全に実行されないことがあります。
+
+// 実際に Goroutine の動作を管理したい場合は、sync.WaitGroup などを使って
+// メインの Goroutine が他の Goroutine の終了を待機するようにすることが一般的です。
