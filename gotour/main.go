@@ -2,47 +2,37 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
-func say(s string) {
-	for i := 0; i < 5; i++ {
-		time.Sleep(100 * time.Millisecond)
-		fmt.Println(s)
+func sum(nums []int, ch chan int) {
+	total := 0
+	for _, num := range nums {
+		total += num
 	}
+	ch <- total // 合計をチャネルに送信
 }
 
 func main() {
-	go say("world")
-	say("hello")
+	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	// チャネルを生成
+	ch := make(chan int)
+
+	// 配列を半分に分けて2つのGoroutineで合計を計算
+	// 2つの Goroutine が ch に結果を送信
+	// 最初の半分のスライス（1, 2, 3, 4, 5）を合計して ch に送信。
+	go sum(nums[:len(nums)/2], ch)
+	// 後半のスライス（6, 7, 8, 9, 10）を合計して ch に送信。
+	go sum(nums[len(nums)/2:], ch)
+
+	// チャネルから合計を受信
+	// これにより、2つの Goroutine が同じ ch にそれぞれの合計を送信。
+	// x := <-ch と y := <-ch で ch から2回受信することで、
+	// 2つの Goroutine の結果をそれぞれ x と y に割り当てている。
+	x := <-ch
+	y := <-ch
+
+	fmt.Println("Total Sum:", x+y) // 合計を表示
 }
 
-// 実行のたびに異なる順序で結果が表示される可能性がある
-// world
-// hello
-// hello
-// world
-// hello
-// world
-// world
-// hello
-// hello
-
-// 実行の仕組み
-// go say("world") は新しい Goroutine を起動しますが、
-// メインの Goroutine はその開始を待たずに次の say("hello") に進みます。
-//
-// これにより、say("world") と say("hello") は並行して実行され、
-// 2つの Goroutine が同時に動いている状態になります。
-//
-// 各 Goroutine 内では time.Sleep(100 * time.Millisecond) によって100ミリ秒の遅延が発生します。
-// これにより、fmt.Println が交互に実行されるように見えますが、
-// 実際の実行順序は Go のスケジューラによって管理されるため、実行のたびに結果が異なることがあります。
-
-// プログラム内で go キーワードを使うと、
-// メインの Goroutine が終了した時点で他の Goroutine も強制的に終了します。
-// したがって、もし main() 内で say("hello") が終了してしまうと、その直後にプログラム全体が終了し、
-// say("world") が完全に実行されないことがあります。
-
-// 実際に Goroutine の動作を管理したい場合は、sync.WaitGroup などを使って
-// メインの Goroutine が他の Goroutine の終了を待機するようにすることが一般的です。
+// Total Sum: 55
